@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Alert,
   FlatList,
@@ -10,7 +10,11 @@ import {
 } from 'react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { DrawerActions, useNavigation } from '@react-navigation/native';
+import {
+  DrawerActions,
+  useFocusEffect,
+  useNavigation,
+} from '@react-navigation/native';
 import Header from '../components/Header';
 import OTPCard from '../components/OTPCard';
 import {
@@ -30,14 +34,20 @@ const HomeScreen = () => {
   const [showFabMenu, setShowFabMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  useEffect(() => {
-    const loadData = async () => {
-      const saved = await loadAccountsSecurely();
-      setAccounts(saved);
-    };
-
-    loadData();
+  const loadData = useCallback(async () => {
+    const saved = await loadAccountsSecurely();
+    setAccounts(saved);
   }, []);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadData();
+    }, [loadData]),
+  );
 
   useEffect(() => {
     const unsubOpen = navigation.addListener('drawerOpen', () =>
