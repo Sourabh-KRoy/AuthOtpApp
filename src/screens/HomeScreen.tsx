@@ -90,7 +90,7 @@ const HomeScreen = () => {
   const [now, setNow] = useState(Date.now());
   const [showFabMenu, setShowFabMenu] = useState(false);
   const [entryMode, setEntryMode] = useState<'manual' | 'scan'>('manual');
-  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const hasScannedRef = useRef(false);
   // const device = useCameraDevice('back');
@@ -130,6 +130,18 @@ const HomeScreen = () => {
     () => getRemainingSeconds(DEFAULT_PERIOD, now),
     [now],
   );
+
+  const filteredAccounts = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+
+    if (!query) {
+      return accounts;
+    }
+
+    return accounts.filter(account =>
+      `${account.issuer} ${account.account}`.toLowerCase().includes(query),
+    );
+  }, [accounts, searchQuery]);
 
   // const codeScanner = useCodeScanner({
   //   codeTypes: ['qr'],
@@ -189,14 +201,44 @@ const HomeScreen = () => {
 
       {searchOpen && (
         <View style={styles.searchWrap}>
-          <TextInput
-            placeholder="Search accounts"
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            style={styles.searchInput}
-            autoCorrect={false}
-            autoCapitalize="none"
-          />
+          <View style={styles.searchCard}>
+            <MaterialCommunityIcons
+              name="magnify"
+              size={18}
+              color="#64748B"
+              style={styles.searchIcon}
+            />
+            <TextInput
+              placeholder="Search issuer or account"
+              placeholderTextColor="#94A3B8"
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+              style={styles.searchInput}
+              autoCorrect={false}
+              autoCapitalize="none"
+              returnKeyType="search"
+            />
+            {searchQuery ? (
+              <TouchableOpacity
+                accessibilityRole="button"
+                onPress={() => setSearchQuery('')}
+                style={styles.clearButton}
+              >
+                <MaterialCommunityIcons
+                  name="close"
+                  size={16}
+                  color="#64748B"
+                />
+              </TouchableOpacity>
+            ) : null}
+          </View>
+          <Text style={styles.searchHint}>
+            {searchQuery.trim()
+              ? `Showing ${filteredAccounts.length} result${
+                  filteredAccounts.length === 1 ? '' : 's'
+                }`
+              : 'Find your saved OTP codes quickly'}
+          </Text>
         </View>
       )}
 
@@ -204,15 +246,7 @@ const HomeScreen = () => {
       {isDrawerOpen && <View style={{ height: 1 }} />}
 
       <FlatList
-        data={
-          searchQuery.trim()
-            ? accounts.filter(a =>
-                `${a.issuer} ${a.account}`
-                  .toLowerCase()
-                  .includes(searchQuery.toLowerCase()),
-              )
-            : accounts
-        }
+        data={filteredAccounts}
         keyExtractor={item => item.id}
         contentContainerStyle={styles.listContainer}
         ListEmptyComponent={
@@ -296,33 +330,64 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#F7FBFF',
+    backgroundColor: '#F4F8FF',
   },
   listContainer: {
     paddingBottom: 130,
-    paddingTop: 4,
+    paddingTop: 6,
   },
   searchWrap: {
-    marginHorizontal: 12,
+    marginHorizontal: 14,
     marginTop: 8,
-    marginBottom: 6,
+    marginBottom: 8,
+  },
+  searchCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#DCE8F5',
+    borderRadius: 16,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    backgroundColor: '#FFFFFF',
+    shadowColor: '#0F172A',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
+    elevation: 3,
+  },
+  searchIcon: {
+    marginRight: 8,
   },
   searchInput: {
-    height: 44,
-    borderWidth: 1,
-    borderColor: '#D5E5F7',
-    borderRadius: 10,
-    paddingHorizontal: 12,
-    backgroundColor: '#FFFFFF',
+    flex: 1,
+    height: 40,
+    color: '#0F172A',
+    fontSize: 14,
+  },
+  clearButton: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#F1F5F9',
+  },
+  searchHint: {
+    marginTop: 8,
+    marginLeft: 4,
+    color: '#64748B',
+    fontSize: 12,
   },
   emptyState: {
     marginTop: 70,
     marginHorizontal: 24,
     backgroundColor: '#FFFFFF',
-    borderRadius: 16,
+    borderRadius: 18,
     borderWidth: 1,
-    borderColor: '#DDE8F4',
-    padding: 20,
+    borderColor: '#DCE8F5',
+    padding: 22,
+    alignItems: 'center',
   },
   emptyTitle: {
     color: '#0F172A',
@@ -333,6 +398,7 @@ const styles = StyleSheet.create({
     color: '#475569',
     marginTop: 8,
     lineHeight: 20,
+    textAlign: 'center',
   },
   fab: {
     position: 'absolute',
@@ -341,13 +407,13 @@ const styles = StyleSheet.create({
     width: 66,
     height: 66,
     borderRadius: 33,
-    backgroundColor: '#1D9BF0',
+    backgroundColor: '#2563EB',
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#0C4A6E',
-    shadowOffset: { width: 0, height: 4 },
+    shadowColor: '#1D4ED8',
+    shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.24,
-    shadowRadius: 8,
+    shadowRadius: 10,
     elevation: 7,
   },
   smallFab: {
@@ -357,10 +423,10 @@ const styles = StyleSheet.create({
     width: 52,
     height: 52,
     borderRadius: 26,
-    backgroundColor: '#0B68A8',
+    backgroundColor: '#1E3A8A',
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#063B57',
+    shadowColor: '#172554',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.22,
     shadowRadius: 6,
