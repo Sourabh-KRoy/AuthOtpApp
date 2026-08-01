@@ -35,13 +35,25 @@ const OTPCard = ({
       <View style={styles.otpBackgroundCircle} pointerEvents="none" />
       <View style={styles.otpFade} pointerEvents="none" />
 
-      <TouchableOpacity style={styles.codeArea} onPress={onCopy} activeOpacity={0.8}>
-        <Text style={styles.otp}>{otp.slice(0, 3)}{"\n"}{otp.slice(3)}</Text>
+      <TouchableOpacity
+        style={styles.codeArea}
+        onPress={onCopy}
+        activeOpacity={0.8}
+      >
+        <Text style={styles.otp}>
+          {otp.slice(0, 3)}
+          {'\n'}
+          {otp.slice(3)}
+        </Text>
       </TouchableOpacity>
 
       <View style={styles.timerWrap}>
         <View style={styles.timerPill}>
-          <MaterialCommunityIcons name="timer-outline" size={14} color="#0F766E" />
+          <MaterialCommunityIcons
+            name="timer-outline"
+            size={14}
+            color="#0F766E"
+          />
           <Text style={styles.timer}>{remaining}s</Text>
         </View>
       </View>

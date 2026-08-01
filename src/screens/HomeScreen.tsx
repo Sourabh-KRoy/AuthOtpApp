@@ -207,7 +207,9 @@ const HomeScreen = () => {
         data={
           searchQuery.trim()
             ? accounts.filter(a =>
-                `${a.issuer} ${a.account}`.toLowerCase().includes(searchQuery.toLowerCase()),
+                `${a.issuer} ${a.account}`
+                  .toLowerCase()
+                  .includes(searchQuery.toLowerCase()),
               )
             : accounts
         }

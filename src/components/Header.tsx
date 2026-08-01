@@ -3,7 +3,13 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const Header = ({ onMenuPress, onSearchPress }: { onMenuPress: () => void; onSearchPress?: () => void }) => {
+const Header = ({
+  onMenuPress,
+  onSearchPress,
+}: {
+  onMenuPress: () => void;
+  onSearchPress?: () => void;
+}) => {
   return (
     <SafeAreaView edges={['top']} style={{ backgroundColor: '#FFFFFF' }}>
       <View>
@@ -16,9 +22,13 @@ const Header = ({ onMenuPress, onSearchPress }: { onMenuPress: () => void; onSea
           </View>
 
           <View style={styles.rightWrap}>
-              <TouchableOpacity style={styles.iconButton} onPress={onSearchPress}>
-                <MaterialCommunityIcons name="magnify" size={22} color="#0E2A44" />
-              </TouchableOpacity>
+            <TouchableOpacity style={styles.iconButton} onPress={onSearchPress}>
+              <MaterialCommunityIcons
+                name="magnify"
+                size={22}
+                color="#0E2A44"
+              />
+            </TouchableOpacity>
 
             <TouchableOpacity style={styles.iconButton}>
               <MaterialCommunityIcons
