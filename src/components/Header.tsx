@@ -28,11 +28,19 @@ const Header = ({
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.iconButton}>
-            <MaterialCommunityIcons name="cloud-upload-outline" size={20} color="#E2E8F0" />
+            <MaterialCommunityIcons
+              name="cloud-upload-outline"
+              size={20}
+              color="#E2E8F0"
+            />
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.profileButton}>
-            <MaterialCommunityIcons name="account-circle" size={26} color="#F8FAFC" />
+            <MaterialCommunityIcons
+              name="account-circle"
+              size={26}
+              color="#F8FAFC"
+            />
           </TouchableOpacity>
         </View>
       </View>

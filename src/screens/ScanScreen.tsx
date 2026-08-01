@@ -1,5 +1,11 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  SafeAreaView,
+} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 
@@ -19,14 +25,21 @@ export default function ScanScreen() {
   return (
     <SafeAreaView style={styles.screen}>
       <View style={styles.topBar}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.topIconButton}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.topIconButton}
+        >
           <MaterialCommunityIcons name="arrow-left" size={24} color="#F8FAFC" />
         </TouchableOpacity>
 
         <Text style={styles.topTitle}>Scan code</Text>
 
         <TouchableOpacity style={styles.topIconButton}>
-          <MaterialCommunityIcons name="flash-outline" size={22} color="#F8FAFC" />
+          <MaterialCommunityIcons
+            name="flash-outline"
+            size={22}
+            color="#F8FAFC"
+          />
         </TouchableOpacity>
       </View>
 
@@ -50,18 +63,32 @@ export default function ScanScreen() {
 
       <View style={styles.bottomBar}>
         <View style={styles.bottomInfoWrap}>
-          <MaterialCommunityIcons name="shield-check-outline" size={18} color="#E2E8F0" />
+          <MaterialCommunityIcons
+            name="shield-check-outline"
+            size={18}
+            color="#E2E8F0"
+          />
           <Text style={styles.bottomInfoText}>Secured by Authenticator</Text>
         </View>
 
         <View style={styles.actionsRow}>
-          <TouchableOpacity style={styles.secondaryButton} onPress={() => navigation.navigate('ManualEntry')}>
+          <TouchableOpacity
+            style={styles.secondaryButton}
+            onPress={() => navigation.navigate('ManualEntry')}
+          >
             <MaterialCommunityIcons name="keyboard" size={18} color="#F8FAFC" />
             <Text style={styles.secondaryButtonText}>Enter key</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.primaryButton} onPress={handleFakeScan}>
-            <MaterialCommunityIcons name="qrcode-scan" size={20} color="#FFF7ED" />
+          <TouchableOpacity
+            style={styles.primaryButton}
+            onPress={handleFakeScan}
+          >
+            <MaterialCommunityIcons
+              name="qrcode-scan"
+              size={20}
+              color="#FFF7ED"
+            />
             <Text style={styles.primaryButtonText}>Simulate scan</Text>
           </TouchableOpacity>
         </View>

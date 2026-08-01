@@ -33,7 +33,11 @@ const OTPCard = ({
         </View>
 
         <TouchableOpacity style={styles.deleteButton} onPress={onDelete}>
-          <MaterialCommunityIcons name="dots-vertical" size={18} color="#CBD5E1" />
+          <MaterialCommunityIcons
+            name="dots-vertical"
+            size={18}
+            color="#CBD5E1"
+          />
         </TouchableOpacity>
       </View>
 
@@ -44,14 +48,22 @@ const OTPCard = ({
       >
         <Text style={styles.otp}>{otp}</Text>
         <View style={styles.copyRow}>
-          <MaterialCommunityIcons name="content-copy" size={13} color="#FCA5A5" />
+          <MaterialCommunityIcons
+            name="content-copy"
+            size={13}
+            color="#FCA5A5"
+          />
           <Text style={styles.copyHint}>Tap to copy</Text>
         </View>
       </TouchableOpacity>
 
       <View style={styles.footerRow}>
         <View style={styles.timerPill}>
-          <MaterialCommunityIcons name="timer-outline" size={14} color="#F8FAFC" />
+          <MaterialCommunityIcons
+            name="timer-outline"
+            size={14}
+            color="#F8FAFC"
+          />
           <Text style={styles.timer}>{remaining}s</Text>
         </View>
         <Text style={styles.periodText}>{period}s cycle</Text>

@@ -214,7 +214,11 @@ const HomeScreen = () => {
               <Text style={styles.actionLabelText}>Enter a setup key</Text>
             </View>
             <View style={styles.smallFab}>
-              <MaterialCommunityIcons name="keyboard" size={20} color="#FFF7ED" />
+              <MaterialCommunityIcons
+                name="keyboard"
+                size={20}
+                color="#FFF7ED"
+              />
             </View>
           </TouchableOpacity>
 
@@ -224,11 +228,7 @@ const HomeScreen = () => {
               setShowFabMenu(false);
             }}
           >
-            <MaterialCommunityIcons
-              name="close"
-              size={30}
-              color="#E2E8F0"
-            />
+            <MaterialCommunityIcons name="close" size={30} color="#E2E8F0" />
           </TouchableOpacity>
         </>
       )}
@@ -240,11 +240,7 @@ const HomeScreen = () => {
             setShowFabMenu(prev => !prev);
           }}
         >
-          <MaterialCommunityIcons
-            name={'plus'}
-            size={32}
-            color="#FFF7ED"
-          />
+          <MaterialCommunityIcons name={'plus'} size={32} color="#FFF7ED" />
         </TouchableOpacity>
       )}
     </SafeAreaView>

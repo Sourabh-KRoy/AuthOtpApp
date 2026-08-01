@@ -113,7 +113,10 @@ export default function ManualEntryScreen() {
   return (
     <SafeAreaView style={styles.screen}>
       <View style={styles.headerRow}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.backButton}
+        >
           <MaterialCommunityIcons name="arrow-left" size={24} color="#E2E8F0" />
         </TouchableOpacity>
         <Text style={styles.title}>Enter code details</Text>
