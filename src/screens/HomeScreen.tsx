@@ -106,7 +106,7 @@ const HomeScreen = () => {
         contentContainerStyle={styles.listContainer}
         ListEmptyComponent={
           <View style={styles.emptyState}>
-            <Text style={styles.emptyTitle}>No accounts added yet</Text>
+            <Text style={styles.emptyTitle}>No accounts</Text>
             <Text style={styles.emptyBody}>
               Tap Add Account to scan a QR code or enter a base32 key manually.
             </Text>
@@ -139,7 +139,7 @@ const HomeScreen = () => {
       {!isDrawerOpen && showFabMenu && (
         <>
           <TouchableOpacity
-            style={[styles.actionItem, { bottom: 140 }]}
+            style={[styles.actionItem, { bottom: 150 }]}
             onPress={() => {
               navigation.navigate('Scan');
               setShowFabMenu(false);

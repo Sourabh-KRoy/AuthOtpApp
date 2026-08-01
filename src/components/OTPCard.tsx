@@ -32,13 +32,13 @@ const OTPCard = ({
           <Text style={styles.account}>{account}</Text>
         </View>
 
-        <TouchableOpacity style={styles.deleteButton} onPress={onDelete}>
+        {/* <TouchableOpacity style={styles.deleteButton} onPress={onDelete}>
           <MaterialCommunityIcons
             name="dots-vertical"
             size={18}
             color="#CBD5E1"
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       <TouchableOpacity

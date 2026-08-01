@@ -74,7 +74,7 @@ function App() {
             drawerInactiveTintColor: '#94A3B8',
             drawerLabelStyle: {
               fontSize: 18,
-              marginLeft: -18,
+              marginLeft: -3,
               fontWeight: '500',
             },
             drawerStyle: {

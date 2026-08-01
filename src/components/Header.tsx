@@ -33,7 +33,10 @@ const Header = ({
         />
 
         {searchQuery ? (
-          <TouchableOpacity onPress={onClearSearch} style={styles.trailingIconWrap}>
+          <TouchableOpacity
+            onPress={onClearSearch}
+            style={styles.trailingIconWrap}
+          >
             <MaterialCommunityIcons name="close" size={17} color="#E2E8F0" />
           </TouchableOpacity>
         ) : (
@@ -47,10 +50,13 @@ const Header = ({
         )}
 
         <TouchableOpacity style={styles.profileButton}>
-          <MaterialCommunityIcons name="account-circle" size={23} color="#F8FAFC" />
+          <MaterialCommunityIcons
+            name="account-circle"
+            size={23}
+            color="#F8FAFC"
+          />
         </TouchableOpacity>
       </View>
-      
     </SafeAreaView>
   );
 };
@@ -69,9 +75,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#7F6169',
+    backgroundColor: '#111827',
     borderWidth: 1,
-    borderColor: '#AD9197',
+    borderColor: '#334155',
   },
   leadingIconWrap: {
     width: 30,
