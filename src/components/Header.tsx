@@ -48,8 +48,9 @@ const Header = ({
 
         <TouchableOpacity style={styles.profileButton}>
           <MaterialCommunityIcons name="account-circle" size={23} color="#F8FAFC" />
-        </View>
+        </TouchableOpacity>
       </View>
+      
     </SafeAreaView>
   );
 };
