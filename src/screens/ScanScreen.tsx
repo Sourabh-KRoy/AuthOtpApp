@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -7,21 +7,84 @@ import {
   SafeAreaView,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import {
+  Camera,
+  useCameraDevice,
+  useCameraPermission,
+} from 'react-native-vision-camera';
+import { useBarcodeScannerOutput } from 'react-native-vision-camera-barcode-scanner';
 import PageHeader from '../components/PageHeader';
 
-// A simple full-screen scan placeholder. In a real app, integrate camera scanning here.
 export default function ScanScreen() {
   const navigation = useNavigation<any>();
+  const device = useCameraDevice('back');
+  const { hasPermission, requestPermission } = useCameraPermission();
+  const [scanLocked, setScanLocked] = useState(false);
+  const scanLockedRef = useRef(false);
 
-  const handleFakeScan = () => {
-    // Simulate a scanned otpauth URL. In production replace with real scanner result.
+  useFocusEffect(
+    useCallback(() => {
+      scanLockedRef.current = false;
+      setScanLocked(false);
+    }, []),
+  );
+
+  useEffect(() => {
+    const ensurePermission = async () => {
+      if (!hasPermission) {
+        await requestPermission();
+      }
+    };
+
+    ensurePermission();
+  }, [hasPermission, requestPermission]);
+
+  const openManualEntry = useCallback(
+    (rawValue: string) => {
+      if (scanLockedRef.current) {
+        return;
+      }
+
+      scanLockedRef.current = true;
+      setScanLocked(true);
+      navigation.navigate('ManualEntry', { scanned: rawValue });
+    },
+    [navigation],
+  );
+
+  const barcodeOutput = useBarcodeScannerOutput({
+    barcodeFormats: ['qr-code'],
+    onBarcodeScanned(
+      barcodes: Array<{ displayValue?: string; rawValue?: string }>,
+    ) {
+      if (scanLockedRef.current || barcodes.length === 0) {
+        return;
+      }
+
+      const firstBarcode = barcodes[0];
+      const scannedValue =
+        firstBarcode.displayValue || firstBarcode.rawValue || '';
+
+      if (!scannedValue.toLowerCase().startsWith('otpauth://totp/')) {
+        return;
+      }
+
+      openManualEntry(scannedValue);
+    },
+    onError(error) {
+      console.error('Barcode scanner error:', error);
+    },
+  });
+
+  const handleDemoScan = () => {
     const fake =
       'otpauth://totp/Acme:john@example.com?secret=JBSWY3DPEHPK3PXP&issuer=Acme';
 
-    // Navigate to manual entry with parsed values prefilled.
-    navigation.navigate('ManualEntry', { scanned: fake });
+    openManualEntry(fake);
   };
+
+  const cameraReady = Boolean(device && hasPermission);
 
   return (
     <SafeAreaView style={styles.screen}>
@@ -32,21 +95,52 @@ export default function ScanScreen() {
       />
 
       <View style={styles.scanArea}>
-        <View style={styles.glowBlue} />
-        <View style={styles.glowYellow} />
-        <View style={styles.glowGreen} />
-        <View style={styles.glowRed} />
+        {cameraReady ? (
+          <Camera
+            style={StyleSheet.absoluteFill}
+            device={device!}
+            isActive={!scanLocked}
+            outputs={[barcodeOutput]}
+          />
+        ) : (
+          <View style={styles.permissionState}>
+            <Text style={styles.permissionTitle}>
+              {hasPermission
+                ? 'Loading camera...'
+                : 'Camera permission required'}
+            </Text>
+            <Text style={styles.permissionBody}>
+              Allow camera access so QR codes can be scanned directly.
+            </Text>
+            {!hasPermission ? (
+              <TouchableOpacity
+                style={styles.allowButton}
+                onPress={requestPermission}
+              >
+                <Text style={styles.allowButtonText}>Allow camera</Text>
+              </TouchableOpacity>
+            ) : null}
+          </View>
+        )}
 
-        <View style={styles.frameWrap}>
-          <View style={[styles.corner, styles.cornerTopLeft]} />
-          <View style={[styles.corner, styles.cornerTopRight]} />
-          <View style={[styles.corner, styles.cornerBottomLeft]} />
-          <View style={[styles.corner, styles.cornerBottomRight]} />
+        <View style={styles.overlay} pointerEvents="none">
+          <View style={styles.glowBlue} />
+          <View style={styles.glowYellow} />
+          <View style={styles.glowGreen} />
+          <View style={styles.glowRed} />
+
+          <View style={styles.frameWrap}>
+            <View style={[styles.corner, styles.cornerTopLeft]} />
+            <View style={[styles.corner, styles.cornerTopRight]} />
+            <View style={[styles.corner, styles.cornerBottomLeft]} />
+            <View style={[styles.corner, styles.cornerBottomRight]} />
+            <View style={styles.scanLine} />
+          </View>
+
+          <Text style={styles.scanHint}>
+            Position the QR code inside the frame to scan automatically
+          </Text>
         </View>
-
-        <Text style={styles.scanHint}>
-          Position the QR code inside the frame to scan automatically
-        </Text>
       </View>
 
       <View style={styles.bottomBar}>
@@ -70,7 +164,7 @@ export default function ScanScreen() {
 
           <TouchableOpacity
             style={styles.primaryButton}
-            onPress={handleFakeScan}
+            onPress={handleDemoScan}
           >
             <MaterialCommunityIcons
               name="qrcode-scan"
@@ -98,44 +192,47 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     overflow: 'hidden',
     backgroundColor: '#111827',
+  },
+  overlay: {
+    ...StyleSheet.absoluteFill,
     alignItems: 'center',
     justifyContent: 'center',
   },
   glowBlue: {
     position: 'absolute',
     left: -70,
-    top: 160,
+    top: 150,
     width: 240,
     height: 110,
     transform: [{ rotate: '-22deg' }],
-    backgroundColor: 'rgba(59, 130, 246, 0.22)',
+    backgroundColor: 'rgba(59, 130, 246, 0.16)',
   },
   glowYellow: {
     position: 'absolute',
     right: -90,
-    top: 160,
+    top: 150,
     width: 260,
     height: 110,
     transform: [{ rotate: '-22deg' }],
-    backgroundColor: 'rgba(59, 130, 246, 0.14)',
+    backgroundColor: 'rgba(96, 165, 250, 0.14)',
   },
   glowGreen: {
     position: 'absolute',
     left: -90,
-    top: 360,
+    top: 350,
     width: 260,
     height: 110,
     transform: [{ rotate: '-22deg' }],
-    backgroundColor: 'rgba(37, 99, 235, 0.18)',
+    backgroundColor: 'rgba(37, 99, 235, 0.16)',
   },
   glowRed: {
     position: 'absolute',
     right: -60,
-    top: 380,
+    top: 370,
     width: 240,
     height: 100,
     transform: [{ rotate: '-22deg' }],
-    backgroundColor: 'rgba(14, 165, 233, 0.16)',
+    backgroundColor: 'rgba(14, 165, 233, 0.14)',
   },
   frameWrap: {
     width: 248,
@@ -178,6 +275,15 @@ const styles = StyleSheet.create({
     borderTopWidth: 0,
     borderLeftWidth: 0,
   },
+  scanLine: {
+    position: 'absolute',
+    left: 24,
+    right: 24,
+    top: '50%',
+    height: 2,
+    borderRadius: 999,
+    backgroundColor: 'rgba(96, 165, 250, 0.8)',
+  },
   scanHint: {
     marginTop: 24,
     paddingHorizontal: 30,
@@ -201,6 +307,37 @@ const styles = StyleSheet.create({
     color: '#E2E8F0',
     fontSize: 14,
     fontWeight: '600',
+  },
+  permissionState: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 18,
+  },
+  permissionTitle: {
+    color: '#E2E8F0',
+    fontSize: 16,
+    fontWeight: '700',
+    textAlign: 'center',
+  },
+  permissionBody: {
+    color: '#94A3B8',
+    marginTop: 8,
+    lineHeight: 20,
+    textAlign: 'center',
+  },
+  allowButton: {
+    marginTop: 12,
+    backgroundColor: '#2563EB',
+    borderRadius: 12,
+    height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 14,
+  },
+  allowButtonText: {
+    color: '#FFFFFF',
+    fontWeight: '700',
   },
   actionsRow: {
     flexDirection: 'row',
