@@ -183,6 +183,7 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: '#0B1220',
+    marginTop: 30,
   },
   scanArea: {
     flex: 1,
@@ -342,6 +343,7 @@ const styles = StyleSheet.create({
   actionsRow: {
     flexDirection: 'row',
     gap: 10,
+    marginBottom: 30,
   },
   secondaryButton: {
     flex: 1,
