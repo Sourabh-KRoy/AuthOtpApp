@@ -1,47 +1,53 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Header = ({
   onMenuPress,
-  onSearchPress,
+  searchQuery,
+  onSearchChange,
+  onClearSearch,
 }: {
   onMenuPress: () => void;
-  onSearchPress?: () => void;
+  searchQuery: string;
+  onSearchChange: (value: string) => void;
+  onClearSearch: () => void;
 }) => {
   return (
     <SafeAreaView edges={['top']} style={styles.safeArea}>
-      <View style={styles.container}>
-        <View style={styles.leftWrap}>
-          <TouchableOpacity onPress={onMenuPress} style={styles.menuButton}>
-            <MaterialCommunityIcons name="menu" size={22} color="#F8FAFC" />
-          </TouchableOpacity>
-          <Text style={styles.title} numberOfLines={1}>
-            Google Authenticator
-          </Text>
-        </View>
+      <View style={styles.searchBarShell}>
+        <TouchableOpacity onPress={onMenuPress} style={styles.leadingIconWrap}>
+          <MaterialCommunityIcons name="menu" size={20} color="#E2E8F0" />
+        </TouchableOpacity>
 
-        <View style={styles.rightWrap}>
-          <TouchableOpacity style={styles.iconButton} onPress={onSearchPress}>
-            <MaterialCommunityIcons name="magnify" size={20} color="#E2E8F0" />
-          </TouchableOpacity>
+        <TextInput
+          value={searchQuery}
+          onChangeText={onSearchChange}
+          placeholder="Search..."
+          placeholderTextColor="#CBD5E1"
+          style={styles.searchInput}
+          autoCapitalize="none"
+          autoCorrect={false}
+          returnKeyType="search"
+        />
 
-          <TouchableOpacity style={styles.iconButton}>
+        {searchQuery ? (
+          <TouchableOpacity onPress={onClearSearch} style={styles.trailingIconWrap}>
+            <MaterialCommunityIcons name="close" size={17} color="#E2E8F0" />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity style={styles.trailingIconWrap}>
             <MaterialCommunityIcons
               name="cloud-upload-outline"
-              size={20}
+              size={18}
               color="#E2E8F0"
             />
           </TouchableOpacity>
+        )}
 
-          <TouchableOpacity style={styles.profileButton}>
-            <MaterialCommunityIcons
-              name="account-circle"
-              size={26}
-              color="#F8FAFC"
-            />
-          </TouchableOpacity>
+        <TouchableOpacity style={styles.profileButton}>
+          <MaterialCommunityIcons name="account-circle" size={23} color="#F8FAFC" />
         </View>
       </View>
     </SafeAreaView>
@@ -53,54 +59,46 @@ export default Header;
 const styles = StyleSheet.create({
   safeArea: {
     backgroundColor: '#0B1220',
-  },
-  container: {
-    height: 60,
     paddingHorizontal: 14,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: '#0B1220',
+    paddingBottom: 8,
   },
-  leftWrap: {
+  searchBarShell: {
+    height: 50,
+    borderRadius: 25,
+    paddingHorizontal: 10,
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: '#7F6169',
+    borderWidth: 1,
+    borderColor: '#AD9197',
+  },
+  leadingIconWrap: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  searchInput: {
     flex: 1,
+    marginLeft: 2,
+    color: '#F8FAFC',
+    fontSize: 16,
   },
-  rightWrap: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  menuButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+  trailingIconWrap: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#1E293B',
-  },
-  title: {
-    color: '#E2E8F0',
-    fontSize: 20,
-    fontWeight: '700',
-    marginLeft: 10,
-    flexShrink: 1,
-  },
-  iconButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#1E293B',
   },
   profileButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#334155',
+    marginLeft: 2,
+    backgroundColor: '#4A556D',
   },
 });

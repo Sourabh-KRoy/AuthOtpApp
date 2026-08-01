@@ -5,7 +5,6 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -29,7 +28,6 @@ const HomeScreen = () => {
   const [accounts, setAccounts] = useState<AuthAccount[]>([]);
   const [now, setNow] = useState(Date.now());
   const [showFabMenu, setShowFabMenu] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
@@ -94,54 +92,10 @@ const HomeScreen = () => {
     <SafeAreaView style={styles.screen}>
       <Header
         onMenuPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
-        onSearchPress={() => {
-          setSearchOpen(prev => !prev);
-          setSearchQuery('');
-        }}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        onClearSearch={() => setSearchQuery('')}
       />
-
-      {searchOpen && (
-        <View style={styles.searchWrap}>
-          <View style={styles.searchCard}>
-            <MaterialCommunityIcons
-              name="magnify"
-              size={18}
-              color="#FDE68A"
-              style={styles.searchIcon}
-            />
-            <TextInput
-              placeholder="Search issuer or account"
-              placeholderTextColor="#FECACA"
-              value={searchQuery}
-              onChangeText={setSearchQuery}
-              style={styles.searchInput}
-              autoCorrect={false}
-              autoCapitalize="none"
-              returnKeyType="search"
-            />
-            {searchQuery ? (
-              <TouchableOpacity
-                accessibilityRole="button"
-                onPress={() => setSearchQuery('')}
-                style={styles.clearButton}
-              >
-                <MaterialCommunityIcons
-                  name="close"
-                  size={16}
-                  color="#FCE7F3"
-                />
-              </TouchableOpacity>
-            ) : null}
-          </View>
-          <Text style={styles.searchHint}>
-            {searchQuery.trim()
-              ? `Showing ${filteredAccounts.length} result${
-                  filteredAccounts.length === 1 ? '' : 's'
-                }`
-              : 'Find your saved OTP codes quickly'}
-          </Text>
-        </View>
-      )}
 
       {/* hide FAB when drawer is open */}
       {isDrawerOpen && <View style={{ height: 1 }} />}
@@ -254,50 +208,7 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     paddingBottom: 130,
-    paddingTop: 2,
-  },
-  searchWrap: {
-    marginHorizontal: 14,
-    marginTop: 2,
-    marginBottom: 8,
-  },
-  searchCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#334155',
-    borderRadius: 18,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    backgroundColor: '#111827',
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.2,
-    shadowRadius: 10,
-    elevation: 3,
-  },
-  searchIcon: {
-    marginRight: 8,
-  },
-  searchInput: {
-    flex: 1,
-    height: 40,
-    color: '#E2E8F0',
-    fontSize: 15,
-  },
-  clearButton: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#1E293B',
-  },
-  searchHint: {
-    marginTop: 8,
-    marginLeft: 4,
-    color: '#94A3B8',
-    fontSize: 12,
+    paddingTop: 8,
   },
   emptyState: {
     marginTop: 70,
