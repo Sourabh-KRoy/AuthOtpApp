@@ -168,6 +168,7 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: '#0B1220',
+    marginTop: 19,
   },
   contentWrap: {
     flex: 1,
