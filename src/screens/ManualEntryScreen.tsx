@@ -116,7 +116,6 @@ export default function ManualEntryScreen() {
       <PageHeader title="Enter code details" />
 
       <View style={styles.contentWrap}>
-
         {errorText ? <Text style={styles.errorText}>{errorText}</Text> : null}
 
         <Text style={styles.label}>Code name</Text>

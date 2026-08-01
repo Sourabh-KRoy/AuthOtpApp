@@ -41,7 +41,11 @@ export default function PageHeader({
         disabled={!rightIconName || !onRightPress}
       >
         {rightIconName ? (
-          <MaterialCommunityIcons name={rightIconName} size={21} color="#F8FAFC" />
+          <MaterialCommunityIcons
+            name={rightIconName}
+            size={21}
+            color="#F8FAFC"
+          />
         ) : (
           <View style={styles.placeholder} />
         )}

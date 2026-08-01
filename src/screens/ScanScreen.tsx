@@ -25,7 +25,11 @@ export default function ScanScreen() {
 
   return (
     <SafeAreaView style={styles.screen}>
-      <PageHeader title="Scan code" rightIconName="flash-outline" onRightPress={() => {}} />
+      <PageHeader
+        title="Scan code"
+        rightIconName="flash-outline"
+        onRightPress={() => {}}
+      />
 
       <View style={styles.scanArea}>
         <View style={styles.glowBlue} />
