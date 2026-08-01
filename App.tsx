@@ -1,44 +1,136 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import React from 'react';
+import { Text, View, StyleSheet } from 'react-native';
+import { StatusBar } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { NavigationContainer } from '@react-navigation/native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import HomeScreen from './src/screens/HomeScreen.tsx';
+import ScanScreen from './src/screens/ScanScreen';
+import ManualEntryScreen from './src/screens/ManualEntryScreen';
 
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+const Drawer = createDrawerNavigator();
+
+type DrawerIconProps = {
+  color: string;
+};
+
+const DummyScreen = ({ title }: { title: string }) => {
+  return (
+    <View style={styles.dummyWrap}>
+      <Text style={styles.dummyTitle}>{title}</Text>
+      <Text style={styles.dummyBody}>
+        This page is ready. You can connect real functionality here.
+      </Text>
+    </View>
+  );
+};
+
+const makeDummyComponent = (title: string) => {
+  return function DummyPage() {
+    return <DummyScreen title={title} />;
+  };
+};
+
+const makeDrawerIcon = (iconName: string) => {
+  return ({ color }: DrawerIconProps) => (
+    <MaterialCommunityIcons name={iconName} size={24} color={color} />
+  );
+};
+
+// Keep drawer simple: only a few top-level items the user requested
+const menuItems = [
+  { name: 'Profile', icon: 'account-circle-outline' },
+  { name: 'Settings', icon: 'cog-outline' },
+  { name: 'About App', icon: 'information' },
+  { name: 'Contact Us', icon: 'email-outline' },
+  { name: 'Privacy Policy', icon: 'shield-check-outline' },
+];
+
+const drawerScreens = menuItems.map(item => ({
+  ...item,
+  component: makeDummyComponent(item.name),
+  drawerIcon: makeDrawerIcon(item.icon),
+}));
+
+const authenticatorDrawerIcon = makeDrawerIcon('shield-account-outline');
 
 function App() {
-  const isDarkMode = useColorScheme() === 'dark';
-
   return (
     <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <AppContent />
+      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+      <NavigationContainer>
+        <Drawer.Navigator
+          initialRouteName="Authenticator"
+          screenOptions={{
+            headerShown: false,
+            drawerType: 'front',
+            drawerActiveTintColor: '#0B3558',
+            drawerInactiveTintColor: '#1F2937',
+            drawerLabelStyle: {
+              fontSize: 18,
+              marginLeft: -18,
+              fontWeight: '500',
+            },
+            drawerStyle: {
+              backgroundColor: '#FFFFFF',
+              width: '82%',
+            },
+          }}
+        >
+          <Drawer.Screen
+            name="Authenticator"
+            component={HomeScreen}
+            options={{
+              drawerIcon: authenticatorDrawerIcon,
+            }}
+          />
+
+          {/* Hidden routes used for full-screen scan/manual entry navigation */}
+          <Drawer.Screen
+            name="Scan"
+            component={ScanScreen}
+            options={{ drawerItemStyle: { height: 0 } }}
+          />
+
+          <Drawer.Screen
+            name="ManualEntry"
+            component={ManualEntryScreen}
+            options={{ drawerItemStyle: { height: 0 } }}
+          />
+
+          {drawerScreens.map(item => (
+            <Drawer.Screen
+              key={item.name}
+              name={item.name}
+              component={item.component}
+              options={{
+                drawerIcon: item.drawerIcon,
+              }}
+            />
+          ))}
+        </Drawer.Navigator>
+      </NavigationContainer>
     </SafeAreaProvider>
   );
 }
-
-function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
-
-  return (
-    <View style={styles.container}>
-      <NewAppScreen
-        templateFileName="App.tsx"
-        safeAreaInsets={safeAreaInsets}
-      />
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
-  container: {
+  dummyWrap: {
     flex: 1,
+    backgroundColor: '#F4F7FB',
+    paddingHorizontal: 20,
+    justifyContent: 'center',
+  },
+  dummyTitle: {
+    fontSize: 28,
+    color: '#0B3558',
+    fontWeight: '700',
+  },
+  dummyBody: {
+    marginTop: 10,
+    color: '#526170',
+    fontSize: 16,
+    lineHeight: 24,
   },
 });
 
