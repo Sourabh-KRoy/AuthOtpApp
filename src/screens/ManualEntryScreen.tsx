@@ -15,6 +15,7 @@ import {
   loadAccountsSecurely,
   saveAccountsSecurely,
 } from '../services/secureStore';
+import PageHeader from '../components/PageHeader';
 
 const parseOtpAuthUri = (rawValue: string) => {
   if (!rawValue.toLowerCase().startsWith('otpauth://totp/')) {
@@ -112,55 +113,54 @@ export default function ManualEntryScreen() {
 
   return (
     <SafeAreaView style={styles.screen}>
-      <View style={styles.headerRow}>
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={styles.backButton}
-        >
-          <MaterialCommunityIcons name="arrow-left" size={24} color="#E2E8F0" />
+      <PageHeader title="Enter code details" />
+
+      <View style={styles.contentWrap}>
+
+        {errorText ? <Text style={styles.errorText}>{errorText}</Text> : null}
+
+        <Text style={styles.label}>Code name</Text>
+        <TextInput
+          value={issuer}
+          onChangeText={setIssuer}
+          style={styles.input}
+          placeholder="Google"
+          placeholderTextColor="#7B8799"
+        />
+
+        <Text style={styles.label}>Account</Text>
+        <TextInput
+          value={account}
+          onChangeText={setAccount}
+          style={styles.input}
+          placeholder="john@email.com"
+          placeholderTextColor="#7B8799"
+        />
+
+        <Text style={styles.label}>Your key</Text>
+        <TextInput
+          value={secret}
+          onChangeText={setSecret}
+          style={styles.input}
+          autoCapitalize="characters"
+          placeholder="ABCD EFGH IJKL"
+          placeholderTextColor="#7B8799"
+        />
+
+        <Text style={styles.label}>Type of key</Text>
+        <View style={styles.selectBox}>
+          <Text style={styles.selectText}>Time based</Text>
+          <MaterialCommunityIcons
+            name="chevron-down"
+            size={22}
+            color="#E2E8F0"
+          />
+        </View>
+
+        <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+          <Text style={styles.saveText}>Add</Text>
         </TouchableOpacity>
-        <Text style={styles.title}>Enter code details</Text>
       </View>
-
-      {errorText ? <Text style={styles.errorText}>{errorText}</Text> : null}
-
-      <Text style={styles.label}>Code name</Text>
-      <TextInput
-        value={issuer}
-        onChangeText={setIssuer}
-        style={styles.input}
-        placeholder="Google"
-        placeholderTextColor="#7B8799"
-      />
-
-      <Text style={styles.label}>Account</Text>
-      <TextInput
-        value={account}
-        onChangeText={setAccount}
-        style={styles.input}
-        placeholder="john@email.com"
-        placeholderTextColor="#7B8799"
-      />
-
-      <Text style={styles.label}>Your key</Text>
-      <TextInput
-        value={secret}
-        onChangeText={setSecret}
-        style={styles.input}
-        autoCapitalize="characters"
-        placeholder="ABCD EFGH IJKL"
-        placeholderTextColor="#7B8799"
-      />
-
-      <Text style={styles.label}>Type of key</Text>
-      <View style={styles.selectBox}>
-        <Text style={styles.selectText}>Time based</Text>
-        <MaterialCommunityIcons name="chevron-down" size={22} color="#E2E8F0" />
-      </View>
-
-      <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-        <Text style={styles.saveText}>Add</Text>
-      </TouchableOpacity>
     </SafeAreaView>
   );
 }
@@ -168,41 +168,24 @@ export default function ManualEntryScreen() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#111318',
+    backgroundColor: '#0B1220',
+  },
+  contentWrap: {
+    flex: 1,
     paddingHorizontal: 16,
-  },
-  headerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 6,
-    marginBottom: 14,
-  },
-  backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#232836',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 8,
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: '700',
-    color: '#F8FAFC',
   },
   label: {
     marginTop: 12,
     marginLeft: 4,
-    color: '#CBD5E1',
+    color: '#94A3B8',
     fontSize: 13,
   },
   input: {
     height: 56,
     borderWidth: 1,
-    borderColor: '#4B5567',
+    borderColor: '#334155',
     borderRadius: 12,
-    backgroundColor: '#171B24',
+    backgroundColor: '#111827',
     color: '#F8FAFC',
     paddingHorizontal: 14,
     marginTop: 6,
@@ -211,9 +194,9 @@ const styles = StyleSheet.create({
     marginTop: 6,
     height: 56,
     borderWidth: 1,
-    borderColor: '#4B5567',
+    borderColor: '#334155',
     borderRadius: 12,
-    backgroundColor: '#171B24',
+    backgroundColor: '#111827',
     paddingHorizontal: 14,
     flexDirection: 'row',
     alignItems: 'center',
@@ -229,12 +212,12 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     height: 56,
     borderRadius: 28,
-    backgroundColor: '#FEF3C7',
+    backgroundColor: '#2563EB',
     alignItems: 'center',
     justifyContent: 'center',
   },
   saveText: {
-    color: '#92400E',
+    color: '#EFF6FF',
     fontWeight: '700',
     fontSize: 18,
   },

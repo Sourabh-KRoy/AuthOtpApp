@@ -1,13 +1,14 @@
 import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { StatusBar } from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import HomeScreen from './src/screens/HomeScreen.tsx';
 import ScanScreen from './src/screens/ScanScreen';
 import ManualEntryScreen from './src/screens/ManualEntryScreen';
+import PageHeader from './src/components/PageHeader';
 
 const Drawer = createDrawerNavigator();
 
@@ -17,12 +18,16 @@ type DrawerIconProps = {
 
 const DummyScreen = ({ title }: { title: string }) => {
   return (
-    <View style={styles.dummyWrap}>
-      <Text style={styles.dummyTitle}>{title}</Text>
-      <Text style={styles.dummyBody}>
-        This page is ready. You can connect real functionality here.
-      </Text>
-    </View>
+    <SafeAreaView style={styles.dummyWrap}>
+      <PageHeader title={title} />
+
+      <View style={styles.dummyContent}>
+        <Text style={styles.dummyTitle}>{title}</Text>
+        <Text style={styles.dummyBody}>
+          This page is ready. You can connect real functionality here.
+        </Text>
+      </View>
+    </SafeAreaView>
   );
 };
 
@@ -58,27 +63,27 @@ const authenticatorDrawerIcon = makeDrawerIcon('shield-account-outline');
 function App() {
   return (
     <SafeAreaProvider>
-      <StatusBar barStyle="light-content" backgroundColor="#111318" />
+      <StatusBar barStyle="light-content" backgroundColor="#0B1220" />
       <NavigationContainer>
         <Drawer.Navigator
           initialRouteName="Authenticator"
           screenOptions={{
             headerShown: false,
             drawerType: 'front',
-            drawerActiveTintColor: '#F8FAFC',
-            drawerInactiveTintColor: '#CBD5E1',
+            drawerActiveTintColor: '#E2E8F0',
+            drawerInactiveTintColor: '#94A3B8',
             drawerLabelStyle: {
               fontSize: 18,
               marginLeft: -18,
               fontWeight: '500',
             },
             drawerStyle: {
-              backgroundColor: '#1A1F2B',
+              backgroundColor: '#0F172A',
               width: '82%',
             },
-            drawerActiveBackgroundColor: '#2B3448',
+            drawerActiveBackgroundColor: '#1E293B',
             sceneStyle: {
-              backgroundColor: '#111318',
+              backgroundColor: '#0B1220',
             },
           }}
         >
@@ -121,13 +126,16 @@ function App() {
 const styles = StyleSheet.create({
   dummyWrap: {
     flex: 1,
-    backgroundColor: '#111318',
+    backgroundColor: '#0B1220',
+  },
+  dummyContent: {
+    flex: 1,
     paddingHorizontal: 20,
     justifyContent: 'center',
   },
   dummyTitle: {
     fontSize: 28,
-    color: '#F8FAFC',
+    color: '#E2E8F0',
     fontWeight: '700',
   },
   dummyBody: {

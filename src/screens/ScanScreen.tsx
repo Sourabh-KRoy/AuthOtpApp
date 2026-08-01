@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
+import PageHeader from '../components/PageHeader';
 
 // A simple full-screen scan placeholder. In a real app, integrate camera scanning here.
 export default function ScanScreen() {
@@ -24,24 +25,7 @@ export default function ScanScreen() {
 
   return (
     <SafeAreaView style={styles.screen}>
-      <View style={styles.topBar}>
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={styles.topIconButton}
-        >
-          <MaterialCommunityIcons name="arrow-left" size={24} color="#F8FAFC" />
-        </TouchableOpacity>
-
-        <Text style={styles.topTitle}>Scan code</Text>
-
-        <TouchableOpacity style={styles.topIconButton}>
-          <MaterialCommunityIcons
-            name="flash-outline"
-            size={22}
-            color="#F8FAFC"
-          />
-        </TouchableOpacity>
-      </View>
+      <PageHeader title="Scan code" rightIconName="flash-outline" onRightPress={() => {}} />
 
       <View style={styles.scanArea}>
         <View style={styles.glowBlue} />
@@ -100,28 +84,7 @@ export default function ScanScreen() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#0F1117',
-  },
-  topBar: {
-    paddingHorizontal: 16,
-    paddingTop: 10,
-    paddingBottom: 4,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  topIconButton: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: '#1B2130',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  topTitle: {
-    color: '#F8FAFC',
-    fontSize: 22,
-    fontWeight: '700',
+    backgroundColor: '#0B1220',
   },
   scanArea: {
     flex: 1,
@@ -130,7 +93,7 @@ const styles = StyleSheet.create({
     marginBottom: 14,
     borderRadius: 24,
     overflow: 'hidden',
-    backgroundColor: '#0C1019',
+    backgroundColor: '#111827',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -150,7 +113,7 @@ const styles = StyleSheet.create({
     width: 260,
     height: 110,
     transform: [{ rotate: '-22deg' }],
-    backgroundColor: 'rgba(250, 204, 21, 0.2)',
+    backgroundColor: 'rgba(59, 130, 246, 0.14)',
   },
   glowGreen: {
     position: 'absolute',
@@ -159,7 +122,7 @@ const styles = StyleSheet.create({
     width: 260,
     height: 110,
     transform: [{ rotate: '-22deg' }],
-    backgroundColor: 'rgba(34, 197, 94, 0.2)',
+    backgroundColor: 'rgba(37, 99, 235, 0.18)',
   },
   glowRed: {
     position: 'absolute',
@@ -168,13 +131,13 @@ const styles = StyleSheet.create({
     width: 240,
     height: 100,
     transform: [{ rotate: '-22deg' }],
-    backgroundColor: 'rgba(244, 63, 94, 0.2)',
+    backgroundColor: 'rgba(14, 165, 233, 0.16)',
   },
   frameWrap: {
     width: 248,
     height: 248,
     borderRadius: 22,
-    backgroundColor: 'rgba(2, 6, 23, 0.55)',
+    backgroundColor: 'rgba(2, 6, 23, 0.45)',
   },
   corner: {
     position: 'absolute',
@@ -193,21 +156,21 @@ const styles = StyleSheet.create({
   cornerTopRight: {
     right: -2,
     top: -2,
-    borderColor: '#FACC15',
+    borderColor: '#38BDF8',
     borderLeftWidth: 0,
     borderBottomWidth: 0,
   },
   cornerBottomLeft: {
     left: -2,
     bottom: -2,
-    borderColor: '#34D399',
+    borderColor: '#60A5FA',
     borderTopWidth: 0,
     borderRightWidth: 0,
   },
   cornerBottomRight: {
     right: -2,
     bottom: -2,
-    borderColor: '#FB7185',
+    borderColor: '#3B82F6',
     borderTopWidth: 0,
     borderLeftWidth: 0,
   },
@@ -244,8 +207,8 @@ const styles = StyleSheet.create({
     height: 48,
     borderRadius: 24,
     borderWidth: 1,
-    borderColor: '#3A4459',
-    backgroundColor: '#1B2130',
+    borderColor: '#334155',
+    backgroundColor: '#1E293B',
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
@@ -260,7 +223,7 @@ const styles = StyleSheet.create({
     flex: 1.2,
     height: 48,
     borderRadius: 24,
-    backgroundColor: '#9A5E1A',
+    backgroundColor: '#2563EB',
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',

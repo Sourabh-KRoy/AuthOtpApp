@@ -52,7 +52,7 @@ export default Header;
 
 const styles = StyleSheet.create({
   safeArea: {
-    backgroundColor: '#111318',
+    backgroundColor: '#0B1220',
   },
   container: {
     height: 60,
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#111318',
+    backgroundColor: '#0B1220',
   },
   leftWrap: {
     flexDirection: 'row',
@@ -78,10 +78,10 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#232836',
+    backgroundColor: '#1E293B',
   },
   title: {
-    color: '#F8FAFC',
+    color: '#E2E8F0',
     fontSize: 20,
     fontWeight: '700',
     marginLeft: 10,
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#1D2230',
+    backgroundColor: '#1E293B',
   },
   profileButton: {
     width: 36,
@@ -101,6 +101,6 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#2D3344',
+    backgroundColor: '#334155',
   },
 });

@@ -51,7 +51,7 @@ const OTPCard = ({
           <MaterialCommunityIcons
             name="content-copy"
             size={13}
-            color="#FCA5A5"
+            color="#93C5FD"
           />
           <Text style={styles.copyHint}>Tap to copy</Text>
         </View>
@@ -80,14 +80,14 @@ export default OTPCard;
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#1A1F2B',
+    backgroundColor: '#111827',
     marginHorizontal: 14,
     marginVertical: 8,
     paddingVertical: 12,
     paddingHorizontal: 14,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: '#2B3448',
+    borderColor: '#1F2937',
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.3,
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#232B3B',
+    backgroundColor: '#1E293B',
   },
   codeArea: {
     marginTop: 10,
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   copyHint: {
-    color: '#FECACA',
+    color: '#BFDBFE',
     marginLeft: 4,
     fontSize: 12,
   },
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   issuer: {
-    color: '#F8FAFC',
+    color: '#E2E8F0',
     fontSize: 17,
     fontWeight: '600',
   },
@@ -153,9 +153,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 11,
     height: 28,
     borderRadius: 14,
-    backgroundColor: '#334155',
+    backgroundColor: '#1E293B',
     borderWidth: 1,
-    borderColor: '#475569',
+    borderColor: '#334155',
   },
   timer: {
     color: '#F8FAFC',
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     marginLeft: 4,
   },
   periodText: {
-    color: '#94A3B8',
+    color: '#93C5FD',
     fontSize: 12,
     fontWeight: '600',
   },
@@ -173,11 +173,11 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 5,
     borderRadius: 999,
-    backgroundColor: '#2B3448',
+    backgroundColor: '#1F2937',
   },
   progressFill: {
     height: 5,
     borderRadius: 999,
-    backgroundColor: '#FB7185',
+    backgroundColor: '#3B82F6',
   },
 });
