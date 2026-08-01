@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
+  SafeAreaView,
   View,
   Text,
   TextInput,
@@ -110,68 +111,133 @@ export default function ManualEntryScreen() {
   };
 
   return (
-    <View style={styles.screen}>
+    <SafeAreaView style={styles.screen}>
       <View style={styles.headerRow}>
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={styles.backButton}
-        >
-          <MaterialCommunityIcons name="arrow-left" size={24} color="#0B3558" />
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+          <MaterialCommunityIcons name="arrow-left" size={24} color="#E2E8F0" />
         </TouchableOpacity>
-        <Text style={styles.title}>Add Account</Text>
+        <Text style={styles.title}>Enter code details</Text>
       </View>
 
       {errorText ? <Text style={styles.errorText}>{errorText}</Text> : null}
 
-      <Text style={styles.label}>Issuer</Text>
-      <TextInput value={issuer} onChangeText={setIssuer} style={styles.input} />
+      <Text style={styles.label}>Code name</Text>
+      <TextInput
+        value={issuer}
+        onChangeText={setIssuer}
+        style={styles.input}
+        placeholder="Google"
+        placeholderTextColor="#7B8799"
+      />
 
       <Text style={styles.label}>Account</Text>
       <TextInput
         value={account}
         onChangeText={setAccount}
         style={styles.input}
+        placeholder="john@email.com"
+        placeholderTextColor="#7B8799"
       />
 
-      <Text style={styles.label}>Secret (base32)</Text>
+      <Text style={styles.label}>Your key</Text>
       <TextInput
         value={secret}
         onChangeText={setSecret}
         style={styles.input}
         autoCapitalize="characters"
+        placeholder="ABCD EFGH IJKL"
+        placeholderTextColor="#7B8799"
       />
 
+      <Text style={styles.label}>Type of key</Text>
+      <View style={styles.selectBox}>
+        <Text style={styles.selectText}>Time based</Text>
+        <MaterialCommunityIcons name="chevron-down" size={22} color="#E2E8F0" />
+      </View>
+
       <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-        <Text style={styles.saveText}>Save Securely</Text>
+        <Text style={styles.saveText}>Add</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: '#F7FBFF', padding: 16 },
-  headerRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 12 },
-  backButton: { padding: 8 },
-  title: { fontSize: 20, fontWeight: '700', color: '#0B3558', marginLeft: 8 },
-  label: { marginTop: 10, color: '#475569' },
+  screen: {
+    flex: 1,
+    backgroundColor: '#111318',
+    paddingHorizontal: 16,
+  },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 6,
+    marginBottom: 14,
+  },
+  backButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#232836',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 8,
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#F8FAFC',
+  },
+  label: {
+    marginTop: 12,
+    marginLeft: 4,
+    color: '#CBD5E1',
+    fontSize: 13,
+  },
   input: {
-    height: 48,
+    height: 56,
     borderWidth: 1,
-    borderColor: '#D5E5F7',
+    borderColor: '#4B5567',
     borderRadius: 12,
-    backgroundColor: '#FFFFFF',
-    color: '#0F172A',
-    paddingHorizontal: 12,
-    marginBottom: 10,
+    backgroundColor: '#171B24',
+    color: '#F8FAFC',
+    paddingHorizontal: 14,
+    marginTop: 6,
+  },
+  selectBox: {
+    marginTop: 6,
+    height: 56,
+    borderWidth: 1,
+    borderColor: '#4B5567',
+    borderRadius: 12,
+    backgroundColor: '#171B24',
+    paddingHorizontal: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  selectText: {
+    color: '#E2E8F0',
+    fontSize: 20,
+    fontWeight: '600',
   },
   saveButton: {
-    marginTop: 8,
-    height: 52,
-    borderRadius: 12,
-    backgroundColor: '#1D9BF0',
+    marginTop: 'auto',
+    marginBottom: 24,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: '#FEF3C7',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  saveText: { color: '#FFFFFF', fontWeight: '700' },
-  errorText: { color: '#DC2626' },
+  saveText: {
+    color: '#92400E',
+    fontWeight: '700',
+    fontSize: 18,
+  },
+  errorText: {
+    color: '#FCA5A5',
+    marginBottom: 6,
+    marginTop: -2,
+  },
 });

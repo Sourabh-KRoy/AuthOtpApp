@@ -58,23 +58,27 @@ const authenticatorDrawerIcon = makeDrawerIcon('shield-account-outline');
 function App() {
   return (
     <SafeAreaProvider>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+      <StatusBar barStyle="light-content" backgroundColor="#111318" />
       <NavigationContainer>
         <Drawer.Navigator
           initialRouteName="Authenticator"
           screenOptions={{
             headerShown: false,
             drawerType: 'front',
-            drawerActiveTintColor: '#0B3558',
-            drawerInactiveTintColor: '#1F2937',
+            drawerActiveTintColor: '#F8FAFC',
+            drawerInactiveTintColor: '#CBD5E1',
             drawerLabelStyle: {
               fontSize: 18,
               marginLeft: -18,
               fontWeight: '500',
             },
             drawerStyle: {
-              backgroundColor: '#FFFFFF',
+              backgroundColor: '#1A1F2B',
               width: '82%',
+            },
+            drawerActiveBackgroundColor: '#2B3448',
+            sceneStyle: {
+              backgroundColor: '#111318',
             },
           }}
         >
@@ -117,18 +121,18 @@ function App() {
 const styles = StyleSheet.create({
   dummyWrap: {
     flex: 1,
-    backgroundColor: '#F4F7FB',
+    backgroundColor: '#111318',
     paddingHorizontal: 20,
     justifyContent: 'center',
   },
   dummyTitle: {
     fontSize: 28,
-    color: '#0B3558',
+    color: '#F8FAFC',
     fontWeight: '700',
   },
   dummyBody: {
     marginTop: 10,
-    color: '#526170',
+    color: '#94A3B8',
     fontSize: 16,
     lineHeight: 24,
   },

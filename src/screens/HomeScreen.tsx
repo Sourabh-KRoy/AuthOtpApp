@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Alert,
   FlatList,
@@ -12,12 +12,6 @@ import {
 import Clipboard from '@react-native-clipboard/clipboard';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { DrawerActions, useNavigation } from '@react-navigation/native';
-// import {
-//   Camera,
-//   useCameraDevice,
-//   useCameraPermission,
-//   useCodeScanner,
-// } from 'react-native-vision-camera';
 import Header from '../components/Header';
 import OTPCard from '../components/OTPCard';
 import {
@@ -29,72 +23,14 @@ import type { AuthAccount } from '../types/authenticator';
 
 const DEFAULT_PERIOD = 30;
 
-const parseOtpAuthUri = (rawValue: string) => {
-  if (!rawValue.toLowerCase().startsWith('otpauth://totp/')) {
-    return null;
-  }
-
-  const payload = rawValue.replace(/^otpauth:\/\/totp\//i, '');
-  const [encodedLabel, query = ''] = payload.split('?');
-  const queryParams = query
-    .split('&')
-    .reduce<Record<string, string>>((acc, pair) => {
-      if (!pair) {
-        return acc;
-      }
-
-      const [key, ...valueParts] = pair.split('=');
-      if (!key) {
-        return acc;
-      }
-
-      const paramKey = decodeURIComponent(key).toLowerCase();
-      const paramValue = decodeURIComponent(valueParts.join('=') || '');
-      acc[paramKey] = paramValue;
-      return acc;
-    }, {});
-
-  const normalizedSecret = (queryParams.secret || '')
-    .replace(/\s+/g, '')
-    .replace(new RegExp('=', 'g'), '')
-    .toUpperCase();
-
-  if (!normalizedSecret) {
-    return null;
-  }
-
-  const decodedLabel = decodeURIComponent(encodedLabel || '');
-  const separatorIndex = decodedLabel.indexOf(':');
-
-  const issuerFromLabel =
-    separatorIndex >= 0
-      ? decodedLabel.slice(0, separatorIndex).trim()
-      : decodedLabel.trim();
-  const accountFromLabel =
-    separatorIndex >= 0 ? decodedLabel.slice(separatorIndex + 1).trim() : '';
-
-  const issuer = (queryParams.issuer || issuerFromLabel || 'Unknown').trim();
-  const account = accountFromLabel || issuerFromLabel || 'Account';
-
-  return {
-    issuer,
-    account,
-    secret: normalizedSecret,
-  };
-};
-
 const HomeScreen = () => {
   const navigation = useNavigation<any>();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [accounts, setAccounts] = useState<AuthAccount[]>([]);
   const [now, setNow] = useState(Date.now());
   const [showFabMenu, setShowFabMenu] = useState(false);
-  const [entryMode, setEntryMode] = useState<'manual' | 'scan'>('manual');
   const [searchOpen, setSearchOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const hasScannedRef = useRef(false);
-  // const device = useCameraDevice('back');
-  // const { hasPermission, requestPermission } = useCameraPermission();
 
   useEffect(() => {
     const loadData = async () => {
@@ -143,41 +79,6 @@ const HomeScreen = () => {
     );
   }, [accounts, searchQuery]);
 
-  // const codeScanner = useCodeScanner({
-  //   codeTypes: ['qr'],
-  //   onCodeScanned: (codes: string | any[]) => {
-  //     if (hasScannedRef.current || codes.length === 0) {
-  //       return;
-  //     }
-
-  //     const firstCode = codes[0]?.value;
-
-  //     if (!firstCode) {
-  //       return;
-  //     }
-
-  //     const parsed = parseOtpAuthUri(firstCode);
-
-  //     if (!parsed) {
-  //       setErrorText('This QR is not a valid otpauth TOTP code.');
-  //       return;
-  //     }
-
-  //     hasScannedRef.current = true;
-  //     setIssuer(parsed.issuer);
-  //     setAccount(parsed.account);
-  //     setSecret(parsed.secret);
-  //     setErrorText('');
-  //     setScanMessage('QR scanned. Review details and save.');
-  //     setEntryMode('manual');
-  //   },
-  // });
-
-  const resetAndCloseModal = () => {
-    setEntryMode('manual');
-    hasScannedRef.current = false;
-  };
-
   const handleDelete = async (id: string) => {
     const updated = accounts.filter(item => item.id !== id);
     await saveAccountsSecurely(updated);
@@ -205,12 +106,12 @@ const HomeScreen = () => {
             <MaterialCommunityIcons
               name="magnify"
               size={18}
-              color="#64748B"
+              color="#FDE68A"
               style={styles.searchIcon}
             />
             <TextInput
               placeholder="Search issuer or account"
-              placeholderTextColor="#94A3B8"
+              placeholderTextColor="#FECACA"
               value={searchQuery}
               onChangeText={setSearchQuery}
               style={styles.searchInput}
@@ -227,7 +128,7 @@ const HomeScreen = () => {
                 <MaterialCommunityIcons
                   name="close"
                   size={16}
-                  color="#64748B"
+                  color="#FCE7F3"
                 />
               </TouchableOpacity>
             ) : null}
@@ -284,32 +185,55 @@ const HomeScreen = () => {
       {!isDrawerOpen && showFabMenu && (
         <>
           <TouchableOpacity
-            style={styles.smallFab}
+            style={[styles.actionItem, { bottom: 140 }]}
             onPress={() => {
               navigation.navigate('Scan');
               setShowFabMenu(false);
             }}
           >
-            <MaterialCommunityIcons
-              name="qrcode-scan"
-              size={22}
-              color="#FFFFFF"
-            />
+            <View style={styles.actionLabel}>
+              <Text style={styles.actionLabelText}>Scan a QR code</Text>
+            </View>
+            <View style={styles.smallFab}>
+              <MaterialCommunityIcons
+                name="qrcode-scan"
+                size={20}
+                color="#FFF7ED"
+              />
+            </View>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.smallFab, { right: 16, bottom: 146 }]}
+            style={[styles.actionItem, { bottom: 90 }]}
             onPress={() => {
               navigation.navigate('ManualEntry');
               setShowFabMenu(false);
             }}
           >
-            <MaterialCommunityIcons name="pencil" size={20} color="#FFFFFF" />
+            <View style={styles.actionLabel}>
+              <Text style={styles.actionLabelText}>Enter a setup key</Text>
+            </View>
+            <View style={styles.smallFab}>
+              <MaterialCommunityIcons name="keyboard" size={20} color="#FFF7ED" />
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.fabClose}
+            onPress={() => {
+              setShowFabMenu(false);
+            }}
+          >
+            <MaterialCommunityIcons
+              name="close"
+              size={30}
+              color="#E2E8F0"
+            />
           </TouchableOpacity>
         </>
       )}
 
-      {!isDrawerOpen && (
+      {!isDrawerOpen && !showFabMenu && (
         <TouchableOpacity
           style={styles.fab}
           onPress={() => {
@@ -317,9 +241,9 @@ const HomeScreen = () => {
           }}
         >
           <MaterialCommunityIcons
-            name={showFabMenu ? 'close' : 'plus'}
+            name={'plus'}
             size={32}
-            color="#FFFFFF"
+            color="#FFF7ED"
           />
         </TouchableOpacity>
       )}
@@ -330,29 +254,29 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#F4F8FF',
+    backgroundColor: '#111318',
   },
   listContainer: {
     paddingBottom: 130,
-    paddingTop: 6,
+    paddingTop: 2,
   },
   searchWrap: {
     marginHorizontal: 14,
-    marginTop: 8,
+    marginTop: 2,
     marginBottom: 8,
   },
   searchCard: {
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#DCE8F5',
-    borderRadius: 16,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    backgroundColor: '#FFFFFF',
-    shadowColor: '#0F172A',
+    borderColor: '#C0848C',
+    borderRadius: 18,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    backgroundColor: '#8F5F6A',
+    shadowColor: '#000000',
     shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.08,
+    shadowOpacity: 0.2,
     shadowRadius: 10,
     elevation: 3,
   },
@@ -362,8 +286,8 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     height: 40,
-    color: '#0F172A',
-    fontSize: 14,
+    color: '#FFF1F2',
+    fontSize: 15,
   },
   clearButton: {
     width: 28,
@@ -371,31 +295,31 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#F1F5F9',
+    backgroundColor: 'rgba(15, 23, 42, 0.24)',
   },
   searchHint: {
     marginTop: 8,
     marginLeft: 4,
-    color: '#64748B',
+    color: '#94A3B8',
     fontSize: 12,
   },
   emptyState: {
     marginTop: 70,
     marginHorizontal: 24,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#1A1F2B',
     borderRadius: 18,
     borderWidth: 1,
-    borderColor: '#DCE8F5',
+    borderColor: '#2B3448',
     padding: 22,
     alignItems: 'center',
   },
   emptyTitle: {
-    color: '#0F172A',
+    color: '#F8FAFC',
     fontWeight: '700',
     fontSize: 16,
   },
   emptyBody: {
-    color: '#475569',
+    color: '#94A3B8',
     marginTop: 8,
     lineHeight: 20,
     textAlign: 'center',
@@ -407,167 +331,65 @@ const styles = StyleSheet.create({
     width: 66,
     height: 66,
     borderRadius: 33,
-    backgroundColor: '#2563EB',
+    backgroundColor: '#9A5E1A',
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#1D4ED8',
+    shadowColor: '#000000',
     shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.24,
+    shadowOpacity: 0.3,
     shadowRadius: 10,
     elevation: 7,
   },
-  smallFab: {
+  actionItem: {
     position: 'absolute',
     right: 16,
-    bottom: 116,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  actionLabel: {
+    backgroundColor: '#8F5F6A',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#E5B6BE',
+    paddingHorizontal: 14,
+    height: 38,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  actionLabelText: {
+    color: '#FFF1F2',
+    fontSize: 14,
+    fontWeight: '700',
+  },
+  smallFab: {
     width: 52,
     height: 52,
     borderRadius: 26,
-    backgroundColor: '#1E3A8A',
+    backgroundColor: '#9A5E1A',
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#172554',
+    shadowColor: '#000000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.22,
     shadowRadius: 6,
     elevation: 6,
   },
-  modalBackdrop: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    backgroundColor: 'rgba(15, 23, 42, 0.48)',
-  },
-  modalCard: {
-    backgroundColor: '#FFFFFF',
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    padding: 20,
-    borderTopWidth: 1,
-    borderColor: '#DCE6F2',
-  },
-  modalTitle: {
-    color: '#0F172A',
-    fontSize: 20,
-    fontWeight: '700',
-    marginBottom: 14,
-  },
-  modeToggleWrap: {
-    flexDirection: 'row',
-    marginBottom: 14,
-    backgroundColor: '#EEF4FB',
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#D5E5F7',
-    padding: 4,
-    gap: 8,
-  },
-  modeToggleButton: {
-    flex: 1,
-    height: 40,
-    borderRadius: 9,
+  fabClose: {
+    position: 'absolute',
+    right: 16,
+    bottom: 24,
+    width: 58,
+    height: 58,
+    borderRadius: 29,
+    backgroundColor: '#636B7F',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  modeToggleButtonActive: {
-    backgroundColor: '#1D9BF0',
-  },
-  modeToggleText: {
-    color: '#334155',
-    fontWeight: '600',
-    fontSize: 13,
-  },
-  modeToggleTextActive: {
-    color: '#FFFFFF',
-  },
-  cameraFrame: {
-    height: 220,
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: '#D0E2F6',
-    overflow: 'hidden',
-    backgroundColor: '#E5E7EB',
-    marginBottom: 10,
-  },
-  permissionState: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 18,
-  },
-  permissionTitle: {
-    color: '#0F172A',
-    fontSize: 16,
-    fontWeight: '700',
-    textAlign: 'center',
-  },
-  permissionBody: {
-    color: '#475569',
-    marginTop: 8,
-    lineHeight: 20,
-    textAlign: 'center',
-  },
-  allowButton: {
-    marginTop: 12,
-    backgroundColor: '#1D9BF0',
-    borderRadius: 10,
-    height: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 14,
-  },
-  allowButtonText: {
-    color: '#FFFFFF',
-    fontWeight: '700',
-  },
-  scanHelperText: {
-    color: '#475569',
-    marginBottom: 4,
-    lineHeight: 19,
-  },
-  input: {
-    height: 48,
-    borderWidth: 1,
-    borderColor: '#D5E5F7',
-    borderRadius: 12,
-    backgroundColor: '#FFFFFF',
-    color: '#0F172A',
-    paddingHorizontal: 12,
-    marginBottom: 10,
-  },
-  errorText: {
-    color: '#DC2626',
-    marginBottom: 6,
-  },
-  modalActions: {
-    marginTop: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: 10,
-  },
-  cancelButton: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: '#D1D5DB',
-    borderRadius: 12,
-    height: 46,
-  },
-  cancelText: {
-    color: '#334155',
-    fontWeight: '600',
-  },
-  saveButton: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 12,
-    height: 46,
-    backgroundColor: '#1D9BF0',
-  },
-  saveText: {
-    color: '#FFFFFF',
-    fontWeight: '700',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.22,
+    shadowRadius: 8,
+    elevation: 6,
   },
 });
 
